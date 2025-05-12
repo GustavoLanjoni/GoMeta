@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>GoMeta - Minhas Metas</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+  <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Inter', sans-serif;
+    }
+
+    body {
+      background-color: #121212;
+      color: #f0f0f0;
+      display: flex;
+      height: 100vh;
+    }
+
+    .sidebar {
+      width: 250px;
+      background: #1e1e1e;
+      padding: 1.5rem;
+      border-right: 1px solid #333;
+    }
+
+    .sidebar h2 {
+      color: #00d8a6;
+      margin-bottom: 1rem;
+      font-size: 1.5rem;
+    }
+
+    .sidebar ul {
+      list-style: none;
+    }
+
+    .sidebar li {
+      padding: 0.5rem 0;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+
+    .sidebar li:hover, .sidebar li.active {
+      background-color: #292929;
+      padding-left: 10px;
+      border-left: 4px solid #00d8a6;
+    }
+
+    .main {
+      flex-grow: 1;
+      padding: 2rem;
+      overflow-y: auto;
+    }
+
+    h1 {
+      text-align: center;
+      color: #00d8a6;
+      margin-bottom: 2rem;
+      font-size: 2.5rem;
+    }
+
+    .card-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1.5rem;
+    }
+
+    .card {
+      background: #1f1f1f;
+      padding: 1.2rem;
+      border-radius: 12px;
+      flex: 1 1 250px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+      transition: transform 0.2s;
+      position: relative;
+      cursor: pointer;
+    }
+
+    .card:hover {
+      transform: translateY(-4px);
+      background-color: #292929;
+    }
+
+    .icon {
+      font-size: 1.5rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .title {
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+      font-size: 1.1rem;
+    }
+
+    .desc {
+      font-size: 0.95rem;
+      margin-bottom: 1rem;
+      color: #ccc;
+    }
+
+    .progress {
+      background: #333;
+      height: 8px;
+      border-radius: 10px;
+      overflow: hidden;
+      margin-bottom: 0.5rem;
+    }
+
+    .progress-bar {
+      height: 100%;
+      background: #00d8a6;
+      width: 65%;
+      transition: width 0.5s ease;
+    }
+
+    .percent {
+      font-size: 0.8rem;
+      color: #aaa;
+      text-align: right;
+    }
+
+    .add-button {
+      margin-top: 2rem;
+      text-align: center;
+    }
+
+    .add-button button {
+      background: #00d8a6;
+      color: #121212;
+      border: none;
+      padding: 0.8rem 1.6rem;
+      font-size: 1rem;
+      border-radius: 25px;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+
+    .add-button button:hover {
+      background: #00c59b;
+    }
+
+    .modal {
+      display: none;
+      position: fixed;
+      z-index: 1000;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      overflow: auto;
+      background-color: rgba(0,0,0,0.8);
+    }
+
+    .modal-content {
+      background-color: #1e1e1e;
+      margin: 5% auto;
+      padding: 20px;
+      border: 1px solid #888;
+      width: 90%;
+      max-width: 500px;
+      border-radius: 8px;
+      color: #fff;
+    }
+
+    .close {
+      color: #aaa;
+      float: right;
+      font-size: 28px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    .close:hover {
+      color: #fff;
+    }
+
+    .form-group {
+      margin-bottom: 1rem;
+    }
+
+    .form-group label {
+      display: block;
+      margin-bottom: 0.3rem;
+    }
+
+    .form-group input, .form-group textarea, .form-group select {
+      width: 100%;
+      padding: 0.5rem;
+      background: #333;
+      border: none;
+      color: #fff;
+      border-radius: 5px;
+    }
+  </style>
+</head>
+<body>
+  <div class="sidebar">
+    <h2>📂 Categorias</h2>
+    <ul>
+      <li class="active">Relacionamento</li>
+      <li>Saúde</li>
+      <li>Finanças</li>
+      <li>Profissional</li>
+      <li>Pessoal</li>
+      <li>➕ Nova Categoria</li>
+    </ul>
+    <div class="add-button">
+      <button onclick="openEditModal('', '', 0)">➕ Nova Meta</button>
+    </div>
+  </div>
+  <div class="main">
+    <h1>🎯 GoMeta - Minhas Metas</h1>
+    <div class="card-list">
+      <div class="card">
+        <div class="icon"><i class="fas fa-heart"></i></div>
+        <div class="title">Melhorar como casal</div>
+        <div class="desc">Trabalhar a comunicação, empatia e momentos de qualidade juntos</div>
+        <div class="progress">
+          <div class="progress-bar" style="width: 50%"></div>
+        </div>
+        <div class="percent">50%</div>
+      </div>
+      <div class="card">
+        <div class="icon"><i class="fas fa-praying-hands"></i></div>
+        <div class="title">Se aproximar mais de Deus</div>
+        <div class="desc">Orar todas as noites e fortalecer a fé</div>
+        <div class="progress">
+          <div class="progress-bar" style="width: 65%"></div>
+        </div>
+        <div class="percent">65%</div>
+      </div>
+    </div>
+  </div>
+
+  <div id="editModal" class="modal">
+    <div class="modal-content">
+      <span class="close" onclick="closeEditModal()">&times;</span>
+      <div class="form-group">
+        <label for="metaTitle">Título da Meta</label>
+        <input type="text" id="metaTitle">
+      </div>
+      <div class="form-group">
+        <label for="metaDesc">Descrição</label>
+        <textarea id="metaDesc"></textarea>
+      </div>
+      <div class="form-group">
+        <label for="metaProgress">Progresso (%)</label>
+        <input type="range" id="metaProgress" min="0" max="100">
+      </div>
+      <div class="form-group">
+        <label for="metaIcon">Ícone (Font Awesome)</label>
+        <input type="text" id="metaIcon" placeholder="Ex: fa-running, fa-book, fa-heart">
+      </div>
+      <div class="form-group">
+        <label for="metaCategory">Categoria</label>
+        <select id="metaCategory">
+          <option>Relacionamento</option>
+          <option>Saúde</option>
+          <option>Finanças</option>
+          <option>Profissional</option>
+          <option>Pessoal</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <button style="background:#00d8a6; padding: 10px 20px; border: none; border-radius: 5px; cursor:pointer">Salvar</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    function openEditModal(title, desc, progress) {
+      document.getElementById('editModal').style.display = 'block';
+      document.getElementById('metaTitle').value = title;
+      document.getElementById('metaDesc').value = desc;
+      document.getElementById('metaProgress').value = progress;
+    }
+
+    function closeEditModal() {
+      document.getElementById('editModal').style.display = 'none';
+    }
+  </script>
+</body>
+</html>
